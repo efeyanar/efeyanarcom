@@ -1,0 +1,81 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import Hero from '@astro/Hero.astro';
+import About from '@astro/About.astro';
+import ProjectSlider from '@react/ProjectSlider.tsx';
+import Contact from '@astro/Contact.astro';
+import { SectionWrapper } from '@react/SectionWrapper';
+import { createClient } from '../lib/supabase/client';
+
+const supabase = createClient();
+
+const { data: heroRes } = await supabase.from('site_content').select('*').eq('key', 'hero_data_tr').maybeSingle();
+const { data: aboutRes } = await supabase.from('site_content').select('*').eq('key', 'about_data_tr').maybeSingle();
+const { data: projectsRes } = await supabase.from('site_content').select('*').eq('key', 'projects_data_tr').maybeSingle();
+const { data: contactRes } = await supabase.from('site_content').select('*').eq('key', 'contact_data_tr').maybeSingle();
+
+const hero = heroRes?.content || { name: "EFE", surname: "YANAR", job: "Web Geliştirici", exploreText: "KEŞFET" };
+const about = aboutRes?.content || { title: "HAKKIMDA", text: "..." };
+
+const defaultProjects = [
+  { 
+    title: "EFEYANAR.COM", 
+    tags: ["Astro", "React", "Tailwind CSS"], 
+    status: "active", 
+    statusText: "AKTİF",
+    desc: "Çoklu dil desteği..." 
+  }
+];
+
+const projectsData = {
+  title: projectsRes?.content?.title || "SEÇİLİ PROJELER",
+  nextBtnText: projectsRes?.content?.nextBtnText || "SIRADAKİ",
+  projects: (projectsRes?.content?.projects && projectsRes.content.projects.length > 0)
+    ? projectsRes.content.projects 
+    : defaultProjects
+};
+
+const contact = contactRes?.content || {
+  title: "İLETİŞİM",
+  email: "hello@efeyanar.com",
+  githubUrl: "https://github.com/efeyanar",
+  linkedinUrl: "https://linkedin.com/in/efe-yanar",
+  nameLabel: "İSİM",
+  namePlaceholder: "ADINIZ",
+  emailLabel: "E-POSTA",
+  emailPlaceholder: "EMAIL@ADRES.COM",
+  messageLabel: "MESAJINIZ",
+  messagePlaceholder: "PROJENİZDEN BAHSEDİN...",
+  buttonText: "MESAJI GÖNDER →"
+};
+---
+
+<MainLayout title="Efe Yanar | Portfolyo">
+  <main class="max-w-7xl mx-auto px-6">
+    <Hero name={hero.name} surname={hero.surname} job={hero.job} exploreText={hero.exploreText} />
+    
+    <SectionWrapper client:load id="about" className="py-20">
+      <About title={about.title} text={about.text} locationTitle={about.locationTitle} location={about.location} specializationTitle={about.specializationTitle} expertise={about.expertise} />
+    </SectionWrapper>
+
+    <SectionWrapper client:load id="projects" className="py-20">
+      <ProjectSlider client:load title={projectsData.title} nextBtnText={projectsData.nextBtnText} projects={projectsData.projects} />
+    </SectionWrapper>
+
+    <SectionWrapper client:load id="contact" className="py-20">
+      <Contact 
+        title={contact.title}
+        email={contact.email}
+        githubUrl={contact.githubUrl}
+        linkedinUrl={contact.linkedinUrl}
+        nameLabel={contact.nameLabel}
+        namePlaceholder={contact.namePlaceholder}
+        emailLabel={contact.emailLabel}
+        emailPlaceholder={contact.emailPlaceholder}
+        messageLabel={contact.messageLabel}
+        messagePlaceholder={contact.messagePlaceholder}
+        buttonText={contact.buttonText}
+      />
+    </SectionWrapper>
+  </main>
+</MainLayout>

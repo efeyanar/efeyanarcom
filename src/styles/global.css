@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+/* Theme color variables used throughout the interface. */
+@theme {
+  --color-bone: #E8E8E3;
+  --color-obsidian: #080807;
+
+  --color-bg-page: var(--color-bone);
+  --color-text-page: var(--color-obsidian);
+
+  --color-bg-card: var(--color-obsidian);
+  --color-text-card: var(--color-bone);
+
+  --color-border-page: rgba(8, 8, 7, 0.1);
+  --color-border-card: rgba(232, 232, 227, 0.1);
+}
+
+:root {
+  color-scheme: light;
+}
+
+/* Dark mode overrides for page and card palette variables. */
+.dark {
+  color-scheme: dark;
+
+  --color-bg-page: var(--color-obsidian);
+  --color-text-page: var(--color-bone);
+
+  --color-bg-card: var(--color-bone);
+  --color-text-card: var(--color-obsidian);
+
+  --color-border-page: rgba(232, 232, 227, 0.1);
+  --color-border-card: rgba(8, 8, 7, 0.1);
+}
+
+body {
+  /* Base page styles for typography and color application. */
+  background-color: var(--color-bg-page);
+  color: var(--color-text-page);
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbar appearance for WebKit browsers. */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-page); 
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-page); 
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--color-text-page) 80%, transparent); 
+}
+
+/* Firefox scrollbar settings to match the theme palette. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-text-page) var(--color-bg-page);
+}

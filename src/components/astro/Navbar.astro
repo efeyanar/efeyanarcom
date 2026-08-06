@@ -1,0 +1,156 @@
+---
+import LabModal from "@react/LabModal.tsx";
+import ThemeToggle from "./toggle/ThemeToggle.astro";
+import LanguageToggle from "./toggle/LanguageToggle.astro";
+import AdminToggle from "./toggle/AdminToggle.astro";
+import { createClient } from "../../lib/supabase/client";
+
+const currentLang = Astro.currentLocale || "tr";
+const supabase = createClient();
+
+const dbKey = currentLang === "tr" ? "about_data_tr" : "about_data_en";
+const { data: aboutRes } = await supabase
+  .from("site_content")
+  .select("*")
+  .eq("key", dbKey)
+  .maybeSingle();
+
+const aboutData = aboutRes?.content;
+const dynamicAboutLabel = aboutData?.navAboutLabel || aboutData?.title || (currentLang === "tr" ? "Hakkımda" : "About");
+
+const navItems = [
+  { name: currentLang === "tr" ? "Ana Sayfa" : "Home", href: "#home" },
+  { name: dynamicAboutLabel, href: "#about" },
+  { name: currentLang === "tr" ? "Projeler" : "Projects", href: "#projects" },
+  { name: currentLang === "tr" ? "İletişim" : "Contact", href: "#contact" },
+];
+---
+
+<nav
+  class="fixed top-0 left-0 w-full z-100 border-b border-text-page/10 bg-bg-page/80 backdrop-blur-md"
+>
+  <div
+    class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between w-full relative z-110 gap-2"
+  >
+    <span
+      class="text-xl sm:text-2xl font-black tracking-tighter text-text-page uppercase select-none shrink-0"
+    >
+      YNR<span class="text-text-page/20">.</span>
+    </span>
+
+    <div class="flex items-center gap-3 sm:gap-6">
+      <ul class="hidden md:flex gap-8">
+        {
+          navItems.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="text-sm font-black uppercase tracking-widest text-text-page hover:opacity-50 transition-opacity"
+              >
+                {item.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="hidden md:flex items-center gap-6">
+        <div class="h-5 w-px bg-text-page/10"></div>
+        <LabModal client:load />
+      </div>
+
+      <div class="hidden md:block h-5 w-px bg-text-page/10"></div>
+
+      <div class="flex items-center gap-1.5 sm:gap-2 text-text-page">
+        <ThemeToggle />
+        <LanguageToggle />
+        <AdminToggle />
+      </div>
+
+      <button
+        id="menu-toggle"
+        class="md:hidden flex flex-col gap-1.5 p-1 outline-none cursor-pointer shrink-0 ml-1 z-110"
+        aria-label="Menüyü Aç/Kapat"
+      >
+        <span
+          class="w-6 h-0.5 bg-text-page transition-all duration-300 origin-center"
+          id="line1"></span>
+        <span
+          class="w-6 h-0.5 bg-text-page transition-all duration-300 origin-center"
+          id="line2"></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div
+  id="mobile-menu"
+  class="fixed inset-0 w-full h-dvh bg-[#080807]/90 dark:bg-[#080807]/95 backdrop-blur-2xl z-90 flex flex-col items-center justify-between p-6 pt-24 pb-8 opacity-0 pointer-events-none transition-all duration-500 ease-in-out"
+>
+  <div class="flex-1 flex items-center justify-center w-full">
+    <ul class="flex flex-col items-center gap-8 w-full">
+      {
+        navItems.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="mobile-link text-3xl sm:text-4xl font-black uppercase tracking-tighter text-[#E8E8E3] hover:opacity-50 transition-all"
+            >
+              {item.name}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="flex flex-col items-center gap-3 w-full border-t border-[#E8E8E3]/15 pt-6 md:hidden max-w-xs shrink-0">
+    <LabModal client:load />
+    <span class="text-[10px] font-mono uppercase tracking-[0.3em] text-[#E8E8E3]/40">
+      EFE YANAR // 2026
+    </span>
+  </div>
+</div>
+
+<script>
+  const menuToggle = document.getElementById("menu-toggle");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const mobileLinks = document.querySelectorAll(".mobile-link");
+  const line1 = document.getElementById("line1");
+  const line2 = document.getElementById("line2");
+  let isOpen = false;
+
+  const toggleMenu = () => {
+    isOpen = !isOpen;
+
+    if (mobileMenu) {
+      mobileMenu.style.opacity = isOpen ? "1" : "0";
+      mobileMenu.style.pointerEvents = isOpen ? "auto" : "none";
+    }
+
+    if (line1 && line2) {
+      line1.style.transform = isOpen
+        ? "translateY(4px) rotate(45deg)"
+        : "translateY(0) rotate(0)";
+      line2.style.transform = isOpen
+        ? "translateY(-4px) rotate(-45deg)"
+        : "translateY(0) rotate(0)";
+    }
+
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
+  };
+
+  menuToggle?.addEventListener("click", toggleMenu);
+
+  mobileLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      if (isOpen) toggleMenu();
+    });
+  });
+</script>
+
+<style>
+  #mobile-menu {
+    will-change: opacity, backdrop-filter;
+  }
+</style>

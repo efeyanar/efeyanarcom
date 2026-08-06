@@ -1,0 +1,74 @@
+---
+import LocalTime from '@react/LocalTime';
+
+interface Props {
+  title: string;
+  text: string;
+  locationTitle: string;
+  location?: string;
+  specializationTitle: string;
+  expertise?: string[];
+}
+
+const { 
+  title, 
+  text, 
+  locationTitle, 
+  location = "İstanbul, TR", 
+  specializationTitle, 
+  expertise = [
+    "Frontend Mimarisi", 
+    "Tasarım Sistemleri", 
+    "Bileşen Tabanlı UI", 
+    "Web Otomasyonu", 
+    "UX / Mikro Etkileşimler"
+  ] 
+} = Astro.props;
+---
+
+<section id="about" class="py-32 border-t-4 border-text-page/10">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
+    
+    <div class="lg:col-span-8 flex flex-col gap-12">
+      <h2 class="text-5xl md:text-7xl font-black uppercase tracking-[calc(-0.05em)] leading-none text-text-page">
+        {title}
+      </h2>
+      
+      <p class="text-xl md:text-2xl font-medium text-text-page/80 leading-relaxed max-w-2xl uppercase tracking-tight">
+        {text}
+      </p>
+    </div>
+
+    <div class="lg:col-span-4 space-y-16 lg:pt-4">
+      
+      <div class="space-y-4">
+        <h3 class="text-[10px] font-black uppercase tracking-[0.4em] text-text-page/30 border-b border-text-page/10 pb-2">
+          {locationTitle}
+        </h3>
+        <div class="space-y-1">
+          <p class="text-2xl font-black uppercase text-text-page">{location}</p>
+          <div class="text-3xl font-black uppercase tracking-tighter text-text-page/40">
+            <LocalTime client:load />
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <h3 class="text-[10px] font-black uppercase tracking-[0.4em] text-text-page/30 border-b border-text-page/10 pb-2">
+          {specializationTitle}
+        </h3>
+        <ul class="space-y-4">
+          {expertise.map(item => (
+            <li class="group flex items-center justify-between border-b border-text-page/5 pb-2 hover:border-text-page/20 transition-colors">
+              <span class="text-xs font-black uppercase tracking-widest text-text-page/60 group-hover:text-text-page transition-colors">
+                {item}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+</section>

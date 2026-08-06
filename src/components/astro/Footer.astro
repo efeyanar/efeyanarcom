@@ -1,0 +1,89 @@
+---
+import SnakeGame from '@react/SnakeGame';
+
+const currentLang = (Astro.currentLocale || 'tr') as 'tr' | 'en';
+const year = new Date().getFullYear();
+
+const translations = {
+  tr: {
+    slogan: "Intersection of aesthetics and function in the digital world.",
+    navTitle: "Navigasyon",
+    locTitle: "Lokasyon",
+    status: "Yeni projelere hazır",
+    copyright: "Tüm Hakları Saklıdır.",
+    links: {
+      projects: "Projeler",
+      about: "Hakkımda",
+      contact: "İletişim",
+      home: "Ana Sayfa"
+    }
+  },
+  en: {
+    slogan: "Intersection of aesthetics and function in the digital world.",
+    navTitle: "Navigation",
+    locTitle: "Location",
+    status: "Open for new projects",
+    copyright: "All Rights Reserved.",
+    links: {
+      projects: "Projects",
+      about: "About",
+      contact: "Contact",
+      home: "Home"
+    }
+  }
+};
+
+const t = translations[currentLang];
+
+const navItems = [
+  { name: t.links.home, href: "#home" },
+  { name: t.links.about, href: "#about" },
+  { name: t.links.projects, href: "#projects" },
+  { name: t.links.contact, href: "#contact" }
+];
+---
+
+<footer class="bg-bg-card text-text-card pt-24 pb-12 mt-32">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-16 pb-24 border-b border-text-card/10">
+      
+      <div class="md:col-span-6 space-y-8">
+        <span class="text-8xl font-black tracking-tighter uppercase select-none">
+          YNR<span class="text-text-card/10">.</span>
+        </span>
+        <p class="text-xl font-bold uppercase tracking-widest max-w-sm leading-tight text-text-card/60 italic">
+          {t.slogan}
+        </p>
+      </div>
+
+      <div class="md:col-span-3 space-y-8">
+        <h4 class="text-xs font-black uppercase tracking-[0.4em] text-text-card/30">{t.navTitle}</h4>
+        <ul class="space-y-4">
+          {navItems.map(item => (
+            <li>
+              <a 
+                href={item.href} 
+                class="text-lg font-black uppercase tracking-widest hover:text-text-card/50 transition-colors"
+              >
+                {item.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="md:col-span-3 flex items-center justify-center">
+  <div class="w-full h-full flex items-center justify-center">
+    <SnakeGame client:visible />
+  </div>
+</div>
+    </div>
+
+    <div class="pt-12 flex flex-col md:flex-row justify-between items-center gap-8">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+        <p class="text-[10px] font-black uppercase tracking-[0.3em] text-text-card/40">{t.status}</p>
+      </div>
+      <p class="text-[10px] font-black uppercase tracking-[0.3em] text-text-card/20">© {year} Efe Yanar. {t.copyright}</p>
+    </div>
+  </div>
+</footer>

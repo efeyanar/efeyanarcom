@@ -1,0 +1,81 @@
+---
+interface Props {
+  name: string;
+  surname: string;
+  job: string;
+  exploreText: string;
+}
+
+const { name, surname, job, exploreText } = Astro.props;
+---
+
+<section id="home" class="py-32 md:py-48 flex flex-col items-start min-h-[80vh] justify-center">
+  <div class="space-y-2">
+    <h1 class="text-8xl md:text-[10rem] font-black uppercase tracking-tighter leading-[0.85] text-text-page">
+      {name} <br /> 
+      <span class="text-text-page">{surname}<span id="hero-dot" class="text-text-page/10 animate-premium-pulse">.</span></span>
+    </h1>
+    
+    <div class="flex flex-col md:flex-row md:items-center gap-8 mt-12">
+      <p 
+        id="hero-job" 
+        data-job={job} 
+        class="text-2xl md:text-3xl font-bold uppercase tracking-[0.2em] text-text-page"
+      >
+        {job}
+      </p>
+      
+      <a 
+        id="hero-explore"
+        href="#about" 
+        class="inline-block px-12 py-5 bg-bg-card text-text-card font-black uppercase tracking-widest hover:opacity-90 transition-all duration-700 ease-out text-sm opacity-0 translate-y-3 pointer-events-none"
+      >
+        {exploreText}
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  (() => {
+    const heroJobEl = document.getElementById('hero-job') as HTMLElement | null;
+    const heroDotEl = document.getElementById('hero-dot') as HTMLElement | null;
+    const heroExploreEl = document.getElementById('hero-explore') as HTMLElement | null;
+
+    if (heroJobEl && heroDotEl) {
+      const fullText = heroJobEl.getAttribute('data-job') || '';
+      heroJobEl.textContent = ''; 
+      
+      let index = 0;
+      const typingSpeed = 120; 
+
+      function typeWriter() {
+        if (heroJobEl && heroDotEl) { 
+          if (index < fullText.length) {
+            heroJobEl.textContent += fullText.charAt(index);
+            index++;
+            const randomDelay = typingSpeed + (Math.random() * 40 - 20);
+            setTimeout(typeWriter, randomDelay);
+          } else {
+            heroDotEl.classList.remove('animate-premium-pulse');
+            if (heroExploreEl) {
+              heroExploreEl.classList.remove('opacity-0', 'translate-y-3', 'pointer-events-none');
+            }
+          }
+        }
+      }
+
+      setTimeout(typeWriter, 600);
+    }
+  })();
+</script>
+
+<style>
+  @keyframes premiumPulse {
+    0%, 100% { opacity: 0.1; }
+    50% { opacity: 0.7; }
+  }
+  .animate-premium-pulse {
+    animation: premiumPulse 1.2s ease-in-out infinite;
+  }
+</style>
