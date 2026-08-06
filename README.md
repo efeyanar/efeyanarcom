@@ -18,6 +18,7 @@ This is the repository for my personal portfolio website, built with **Astro**, 
 ## ⚡ Features & Interactive Components
 
 * 🚀 **Fast Performance:** Hybrid rendering architecture using Astro Islands for zero-JS by default and selective hydration for React components.
+* 🛠️ **Custom Admin Panel:** Dedicated management dashboard for dynamic project updates, content editing, and portfolio management.
 * 📦 **Custom Lab Modal & ProjectCard Slider:** Interactive project showcases and custom UI modals built with React for smooth user experience.
 * 🎮 **Interactive Snake Game Wrapper:** A fun, interactive mini-game component built in React integrated directly into the portfolio.
 * 📱 **Responsive & Modern Design:** Fully responsive layout styled with Tailwind CSS and enhanced with smooth UI transitions and custom typing animations.
